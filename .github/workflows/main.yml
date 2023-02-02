@@ -20,6 +20,5 @@ jobs:
         method: 'POST'
         username: "bhausleitner"
         password: "116b9b69083ed7dfc08877ac0fe5646c86"
-        customHeaders: '{"Content-Type": "application/json"}'
         data: '{"GIT_BRANCH": "master", "ENV": "dev"}'
         
