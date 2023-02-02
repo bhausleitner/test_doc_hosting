@@ -15,8 +15,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Trigger Jenkins Build
-      run: curl -X GET https://api.coindesk.com/v1/bpi/currentprice.json
         
     - name: GET all workspace
       run: | 
@@ -24,10 +22,10 @@ jobs:
 
     - name: read workspace id
       id: workspace 
-      run: echo "::set-output name=id::$(cat workspaces.json | jq -c '.workspaces[] | select(.name == "time")')"
+      run: echo "::set-output name=time::$(cat workspaces.json | jq -c '.workspaces[] | select(.name == "time")')"
 
     - name: print workspace id
-      run: echo ${{ steps.workspace.outputs.id }}
+      run: echo ${{ steps.workspace.outputs.time }}
 
   
 
