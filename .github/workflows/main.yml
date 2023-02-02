@@ -13,12 +13,14 @@ jobs:
   deployment:
     runs-on: ubuntu-latest
     steps:
-    - name: Deploy Stage
-      uses: fjogeleit/http-request-action@v1
+    - name: Build single job
+      uses: Mondtic/build-jenkins-job@master
       with:
-        url: 'https://jenkins-ai.tesla.com/job/eval/buildWithParameters?token=116b9b69083ed7dfc08877ac0fe5646c86'
-        method: 'POST'
-        username: "bhausleitner"
-        password: "116b9b69083ed7dfc08877ac0fe5646c86"
-        data: '{"GIT_BRANCH": "master", "ENV": "dev"}'
+        jenkins-url: 'https://jenkins-ai.tesla.com/job/eval/buildWithParameters?token=116b9b69083ed7dfc08877ac0fe5646c86'
+        jenkins-token: '116b9b69083ed7dfc08877ac0fe5646c86'
+        jenkins-user: 'bhausleitner'
+        jenkins-job: ${{ secrets.JENKINS_JOB }}
+        jenkins-job-params: "{'GIT_BRANCH': 'master', 'ENV': 'dev'}"
+        jenkins-wait-job: "no-wait"
+        jenkins-ssl-verify: "true"
         
