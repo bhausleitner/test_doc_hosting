@@ -1,0 +1,29 @@
+name: Jenkins Build with Parameters and Monitor
+on: 
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'     
+        required: true
+        default: 'warning'
+      tags:
+        description: 'Test scenario tags'  
+
+jobs:
+
+  build:
+    name: Test Berni
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Trigger Jenkins Build with Parameters
+      uses: actions/http-client@v2
+      with:
+        url: "https://jenkins-ai.tesla.com/job/eval/buildWithParameters?token=116b9b69083ed7dfc08877ac0fe5646c86"
+        method: POST
+        params:
+          GIT_BRANCH: "master"
+          ENV: "dev"
+        auth:
+          username: bhausleitner
+          password: 116b9b69083ed7dfc08877ac0fe5646c86
