@@ -16,5 +16,5 @@ jobs:
 
     steps:
     - name: Trigger Jenkins Build
-      run: curl -i https://jenkins-ai.tesla.com/job/eval/buildWithParameters?token=116b9b69083ed7dfc08877ac0fe5646c86 -F GIT_BRANCH=master -F ENV=dev --user bhausleitner:116b9b69083ed7dfc08877ac0fe5646c86
+      run: curl -X POST https://jenkins-ai.tesla.com/job/eval/buildWithParameters?token=116b9b69083ed7dfc08877ac0fe5646c86 -F GIT_BRANCH=master -F ENV=dev --user bhausleitner:116b9b69083ed7dfc08877ac0fe5646c86
         
