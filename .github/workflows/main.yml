@@ -21,9 +21,7 @@ jobs:
       with:
         url: "https://jenkins-ai.tesla.com/job/eval/buildWithParameters?token=116b9b69083ed7dfc08877ac0fe5646c86"
         method: POST
-        params:
-          GIT_BRANCH: "master"
-          ENV: "dev"
+        data: '{"GIT_BRANCH": "master", "ENV": "dev"}'
         auth:
           username: bhausleitner
           password: 116b9b69083ed7dfc08877ac0fe5646c86
