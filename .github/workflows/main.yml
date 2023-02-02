@@ -16,11 +16,19 @@ jobs:
 
     steps:
     - name: Trigger Jenkins Build
-      run: curl -X POST https://jenkins-ai.tesla.com/job/eval/buildWithParameters?token=116b9b69083ed7dfc08877ac0fe5646c86 -F GIT_BRANCH=master -F ENV=dev --user bhausleitner:116b9b69083ed7dfc08877ac0fe5646c86
+      run: curl -X GET https://api.coindesk.com/v1/bpi/currentprice.json
         
-    - name: Get Build URL
-      if: steps.trigger.outputs.status == 201
-      env:
-        BUILD_URL: ${{ steps.trigger.outputs.headers.Location }}
+    - name: GET all workspace
+      run: | 
+          curl --location --request GET 'https://api.coindesk.com/v1/bpi/currentprice.json' -o workspaces.json
+
+    - name: read workspace id
+      id: workspace 
+      run: echo "::set-output name=id::$(cat workspaces.json | jq -c '.workspaces[] | select(.name == "time")')"
+
+    - name: print workspace id
+      run: echo ${{ steps.workspace.outputs.id }}
+
+  
 
     
