@@ -10,18 +10,16 @@ on:
         description: 'Test scenario tags'  
 
 jobs:
-
-  build:
-    name: Test Berni
+  deployment:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Trigger Jenkins Build with Parameters
+    - name: Deploy Stage
       uses: fjogeleit/http-request-action@v1
       with:
-        url: "https://jenkins-ai.tesla.com/job/eval/buildWithParameters?token=116b9b69083ed7dfc08877ac0fe5646c86"
+        url: 'https://jenkins-ai.tesla.com/job/eval/buildWithParameters?token=116b9b69083ed7dfc08877ac0fe5646c86'
         method: 'POST'
-        data: '{"GIT_BRANCH": "master", "ENV": "dev"}'
         username: "bhausleitner"
         password: "116b9b69083ed7dfc08877ac0fe5646c86"
+        customHeaders: '{"Content-Type": "application/json"}'
+        data: '{"GIT_BRANCH": "master", "ENV": "dev"}'
         
