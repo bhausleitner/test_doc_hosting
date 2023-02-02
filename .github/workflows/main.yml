@@ -16,27 +16,5 @@ jobs:
 
     steps:
     - name: Trigger Jenkins Build
-      run: curl -i https://jenkins-ai.tesla.com/job/eval/buildWithParameters?token=116b9b69083ed7dfc08877ac0fe5646c86 -F GIT_BRANCH=master -F ENV=dev --user bhausleitner:116b9b69083ed7dfc08877ac0fe5646c86 
-
-    - name: Get Build URL
-      if: steps.trigger.outputs.status == 201
-      env:
-        BUILD_URL: ${{ steps.trigger.outputs.headers.Location }}
-
-    - name: Monitor Build Status
-      id: monitor
-      uses: actions/http-client@v2
-      with:
-        url: ${{ env.BUILD_URL }}/api/json
-      env:
-        BUILD_URL: ${{ env.BUILD_URL }}
-
-    - name: Check Build Status
-      if: steps.monitor.outputs.status == 200
-      env:
-        BUILD_STATUS: ${{ steps.monitor.outputs.json.result }}
-
-    - name: Print Build Result
-      if: steps.check.outputs.status == 200
-      run: echo "Build Result: ${{ env.BUILD_STATUS }}"
+      run: curl -i https://jenkins-ai.tesla.com/job/eval/buildWithParameters?token=116b9b69083ed7dfc08877ac0fe5646c86 -F GIT_BRANCH=master -F ENV=dev --user bhausleitner:116b9b69083ed7dfc08877ac0fe5646c86
         
