@@ -20,7 +20,7 @@ jobs:
         jenkins-token: '116b9b69083ed7dfc08877ac0fe5646c86'
         jenkins-user: 'bhausleitner'
         jenkins-job: 'eval'
-        jenkins-job-params: "{'GIT_BRANCH': 'master', 'ENV': 'dev'}"
+        jenkins-job-params: '{"GIT_BRANCH": "master", "ENV": "dev"}'
         jenkins-wait-job: "no-wait"
         jenkins-ssl-verify: "true"
         
