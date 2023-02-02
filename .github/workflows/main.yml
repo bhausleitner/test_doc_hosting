@@ -1,6 +1,14 @@
-name: Jenkins Build with Parameters and Monitor
+
+name: Jenkins Build and Monitor
 on: 
-  workflow_dispatch
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'     
+        required: true
+        default: 'warning'
+      tags:
+        description: 'Test scenario tags'  
 
 jobs:
   build:
