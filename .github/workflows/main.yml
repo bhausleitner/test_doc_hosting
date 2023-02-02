@@ -15,18 +15,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-        
-    - name: GET all workspace
-      run: | 
-          curl --location --request GET 'https://api.coindesk.com/v1/bpi/currentprice.json' -o workspaces.json
 
-    - name: read workspace id
-      id: workspace 
-      run: echo "::set-output name=time::$(cat workspaces.json | jq -c '.workspaces[] | select(.name == "time")')"
+    - name: Make API Request
+      run: |
+        RESPONSE=$(curl -X POST "https://api.coindesk.com/v1/bpi/currentprice.json" -H "Content-Type: application/json")
+        LOCATION=$(echo "$RESPONSE" | grep -i time | awk '{print $2}')
+        echo "::set-env name=LOCATION::$LOCATION"
 
-    - name: print workspace id
-      run: echo ${{ steps.workspace.outputs.time }}
-
-  
-
-    
+    - name: Print Location
+      run: echo "$LOCATION"
