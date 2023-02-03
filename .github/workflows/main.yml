@@ -10,32 +10,39 @@ on:
       tags:
         description: 'Test scenario tags'  
 
+env:
+  JENKINS_URL: https://jenkins-ai.tesla.com
+  JOB_NAME: eval
+  TOKEN: 116b9b69083ed7dfc08877ac0fe5646c86
+  USER: bhausleitner
+  PASSWORD: 116b9b69083ed7dfc08877ac0fe5646c86
+  GIT_BRANCH: master
+  ENV: dev
+
 jobs:
-  test-curl-action:
-    name: "Perform REST API"
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: "Call API 1"
-        uses: indiesdev/curl@v1.1
-        id: api
-        with:
-          url: https://reqres.in/api/users
-          method: "POST"
-          accept: 201
-          body: '{ "name": "breeze", "job": "devops" }'
-          log-response: true
-      - name: "Call API 2"
-        uses: indiesdev/curl@v1.1
-        id: api2
-        with:
-          url: https://reqres.in/api/users
-          method: "POST"
-          accept: 201
-          # you can use multiline format to construct json data object, the content should be yml format.
-          # this format apply to inputs: body, headers and params
-          body: |
-            name: breeze
-            job: devops
-          log-response: true
-      - name: "Use response"
-        run: echo ${{ steps.api.outputs.response }}
+    - name: Trigger Jenkins Build
+      run: |
+        curl -i "${JENKINS_URL}/job/${JOB_NAME}/buildWithParameters?token=${TOKEN}" \
+        -F GIT_BRANCH="${GIT_BRANCH}" -F ENV="${ENV}" \
+        --user "${USER}:${PASSWORD}" \
+        -o response.txt
+      
+    - name: Monitor Jenkins Build
+      if: steps.trigger_jenkins_build.outputs.exit-code == 0
+      run: |
+        BUILD_LOCATION=$(grep "Location" response.txt | awk '{print $2}')
+        echo "Build location: ${BUILD_LOCATION}"
+        
+        BUILD_STATUS="IN_PROGRESS"
+        while [ "${BUILD_STATUS}" == "IN_PROGRESS" ]; do
+          curl -i "${BUILD_LOCATION}" --user "${USER}:${PASSWORD}" \
+          -o build_status.txt
+          BUILD_STATUS=$(grep "X-Jenkins" build_status.txt | awk '{print $2}')
+          echo "Build status: ${BUILD_STATUS}"
+          sleep 5
+        done
+
