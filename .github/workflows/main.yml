@@ -1,48 +1,22 @@
+name: Python Lint Check
 
-name: Jenkins Build and Monitor
-on: 
-  workflow_dispatch:
-    inputs:
-      logLevel:
-        description: 'Log level'     
-        required: true
-        default: 'wsarning'
-      tags:
-        description: 'Test scenario tags'  
-
-env:
-  JENKINS_URL: https://jenkins-ai.tesla.com
-  JOB_NAME: eval
-  TOKEN: 116b9b69083ed7dfc08877ac0fe5646c86
-  USER: bhausleitner
-  PASSWORD: 116b9b69083ed7dfc08877ac0fe5646c86
-  GIT_BRANCH: master
-  ENV: dev
+on: [push, pull_request]
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Trigger Jenkins Build
-      run: |
-        curl -i "${JENKINS_URL}/job/${JOB_NAME}/buildWithParameters?token=${TOKEN}" \
-        -F GIT_BRANCH="${GIT_BRANCH}" -F ENV="${ENV}" \
-        --user "${USER}:${PASSWORD}" \
-        -o response.txt
-      
-    - name: Monitor Jenkins Build
-      if: steps.trigger_jenkins_build.outputs.exit-code == 0
-      run: |
-        BUILD_LOCATION=$(grep "Location" response.txt | awk '{print $2}')
-        echo "Build location: ${BUILD_LOCATION}"
-        
-        BUILD_STATUS="IN_PROGRESS"
-        while [ "${BUILD_STATUS}" == "IN_PROGRESS" ]; do
-          curl -i "${BUILD_LOCATION}" --user "${USER}:${PASSWORD}" \
-          -o build_status.txt
-          BUILD_STATUS=$(grep "X-Jenkins" build_status.txt | awk '{print $2}')
-          echo "Build status: ${BUILD_STATUS}"
-          sleep 5
-        done
+    - name: Checkout code
+      uses: actions/checkout@v2
 
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x  # Replace with your desired Python version
+
+    - name: Install dependencies
+      run: pip install flake8
+
+    - name: Run Flake8 lint check
+      run: flake8 .
